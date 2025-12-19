@@ -10,7 +10,12 @@ const { createUser, signin } = require("./Handlers/user");
 const { createCart, reviewCart } = require("./Handlers/cart");
 const { authorization } = require("../utils/auth");
 const { placeOrder } = require("./Handlers/order");
-const { createPromo, fetchPromo } = require("./Handlers/promo");
+const {
+  createPromo,
+  fetchPromo,
+  updatePromo,
+  deletePromo,
+} = require("./Handlers/promo");
 
 router.get("/welcome", welcomeMsg);
 
@@ -34,5 +39,7 @@ router.post("/order/place-order", authorization, placeOrder);
 // Promo
 router.post("/promo/create", authorization, createPromo);
 router.get("/promo/fetch", authorization, fetchPromo);
+router.put("/promo/update", authorization, updatePromo);
+router.post("/promo/delete/:promo_code", authorization, deletePromo);
 
 module.exports = router;

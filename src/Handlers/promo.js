@@ -13,6 +13,18 @@ const createPromo = async (req, res) => {
         errors: error?.details,
       });
     }
+
+    // Check for existing promo code
+    const promoExists = await Promo.findOne({
+      promo_code: req.body.promo_code,
+    });
+    if (promoExists) {
+      return res
+        .status(409)
+        .json({ success: false, message: "Promo code already exists" });
+    }
+
+    // Create and save new promo
     const promo = new Promo(req.body);
     await promo.save();
     res
@@ -26,6 +38,7 @@ const createPromo = async (req, res) => {
 
 const updatePromo = async (req, res) => {
   try {
+    // Validate request body
     const { error } = promoValidator.validate(req.body, { abortEarly: false });
     if (error) {
       return res.status(400).json({
@@ -35,12 +48,14 @@ const updatePromo = async (req, res) => {
       });
     }
 
+    // Update promo
     const updateDocument = await Promo.findOneAndUpdate(
       { promo_code: req.body.promo_code },
       { $set: req.body },
       { new: true }
     );
 
+    // Check if promo code exists
     if (!updateDocument) {
       return res
         .status(404)
@@ -57,9 +72,12 @@ const updatePromo = async (req, res) => {
 
 const fetchPromo = async (req, res) => {
   try {
+    // Fetch promo codes, optionally filter by promo_code query parameter
     const promoCode = req.query.promo_code
       ? { promo_code: req.query.promo_code }
       : {};
+
+    // Fetch promos from database
     const data = await Promo.find(promoCode);
     if (!data.length) {
       return res
@@ -75,4 +93,30 @@ const fetchPromo = async (req, res) => {
   }
 };
 
-module.exports = { createPromo, updatePromo, fetchPromo };
+const deletePromo = async (req, res) => {
+  try {
+    const promoCode = req.params?.promo_code;
+
+    // Delete promo code
+    const deleteDocument = await Promo.findOneAndUpdate(
+      { promo_code: promoCode, is_active: true },
+      { $set: { is_active: false } },
+      { new: true }
+    );
+
+    // Check if promo code exists
+    if (!deleteDocument) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Promo code not found" });
+    }
+    res
+      .status(200)
+      .json({ success: true, message: "Promo deleted successfully" });
+  } catch (err) {
+    const errorMsg = errorHandling(err);
+    res.status(500).json({ success: false, message: errorMsg });
+  }
+};
+
+module.exports = { createPromo, updatePromo, fetchPromo, deletePromo };
