@@ -58,4 +58,4 @@ const promoSchema = new Schema({
 
 const Promo = mongoose.model("promos", promoSchema);
 
-export default Promo;
+module.exports = Promo;

@@ -10,6 +10,7 @@ const { createUser, signin } = require("./Handlers/user");
 const { createCart, reviewCart } = require("./Handlers/cart");
 const { authorization } = require("../utils/auth");
 const { placeOrder } = require("./Handlers/order");
+const { createPromo } = require("./Handlers/promo");
 
 router.get("/welcome", welcomeMsg);
 
