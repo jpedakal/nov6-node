@@ -1,22 +1,22 @@
 const express = require("express");
 const router = express.Router();
 const {
-    welcomeMsg,
-    fetchProduct,
-    insertProduct,
-    deleteProduct
+  welcomeMsg,
+  fetchProduct,
+  insertProduct,
+  deleteProduct,
 } = require("./Handlers/product");
 const { createUser, signin } = require("./Handlers/user");
 const { createCart, reviewCart } = require("./Handlers/cart");
 const { authorization } = require("../utils/auth");
 const { placeOrder } = require("./Handlers/order");
-const { createPromo } = require("./Handlers/promo");
+const { createPromo, fetchPromo } = require("./Handlers/promo");
 
 router.get("/welcome", welcomeMsg);
 
 // Product
 router.get("/fetchProduct/:id", authorization, fetchProduct);
-router.post("/saveProduct", insertProduct);     
+router.post("/saveProduct", insertProduct);
 // router.put("/updateProduct", updateProduct);
 router.delete("/deleteProduct", deleteProduct);
 
@@ -32,6 +32,7 @@ router.get("/cart/review", authorization, reviewCart);
 router.post("/order/place-order", authorization, placeOrder);
 
 // Promo
-router.post('/promo/create', authorization, createPromo)
+router.post("/promo/create", authorization, createPromo);
+router.get("/promo/fetch", authorization, fetchPromo);
 
 module.exports = router;
