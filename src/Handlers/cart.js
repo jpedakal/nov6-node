@@ -4,7 +4,8 @@ const Promo = require('../models/Promo');
 const {
     checkQuantityAgainstLimitPerOrder,
     calculateSubtotal,
-    calculateTaxAmount,
+    calculateTax,
+    calculateDiscount,
 } = require('../../utils/common');
 
 const createCart = async (req, res) => {
@@ -22,9 +23,10 @@ const createCart = async (req, res) => {
         if (outOfStockItemsCheck.length > 0) {
             res.status(409).json(outOfStockItemsCheck);
         } else {
+
             // Fetch Subtotal, Tax and Total
             const subTotal = calculateSubtotal(totalItems);
-            const tax = calculateTaxAmount(subTotal);
+            const tax = calculateTax(subTotal);
             const total = subTotal + tax;
 
             // Create new cart
@@ -35,6 +37,7 @@ const createCart = async (req, res) => {
                         $set: {
                             items: totalItems,
                             sub_total: subTotal,
+                            taxable_amount: subTotal,
                             tax: tax,
                             total: total,
                         },
@@ -46,6 +49,7 @@ const createCart = async (req, res) => {
                 let cart = new Cart({
                     items: totalItems,
                     sub_total: subTotal,
+                    taxable_amount: subTotal,
                     tax: tax,
                     total: total,
                 });
@@ -125,9 +129,10 @@ const promoApply = async (req, res) => {
                 .json({ success: false, message: 'Invalid promo code.' });
         }
 
-        const sub_total = calculateSubtotal(cartExist.items, promoDetails);
-        const tax = calculateTaxAmount(sub_total);
-        const total = sub_total + tax;
+        const discount = calculateDiscount(cartExist.sub_total, promoDetails);
+        const taxable_amount = cartExist.sub_total - discount;
+        const tax = calculateTax(cartExist.sub_total, discount);
+        const total = taxable_amount + tax;
 
         let promo_details = {
             promo_code: promoDetails.promo_code,
@@ -141,7 +146,8 @@ const promoApply = async (req, res) => {
             { customer_id: customer_id },
             {
                 $set: {
-                    sub_total,
+                    discount,
+                    taxable_amount,
                     tax,
                     total,
                     promo_applied: true,
@@ -161,4 +167,62 @@ const promoApply = async (req, res) => {
     }
 };
 
-module.exports = { createCart, reviewCart, promoApply };
+const promoRemove = async (req, res) => {
+    const { customer_id } = req.user;
+    try {
+        const promoCode = req.body.promo_code;
+        const cartExist = await Cart.findOne({ customer_id });
+        if (!cartExist) {
+            return res.status(404).json({ message: 'Cart not found' });
+        }
+
+        if (!cartExist.promo_applied) {
+            return res.status(400).json({
+                success: false,
+                message: 'No promo code applied to this cart.',
+            });
+        }
+
+        if (cartExist.promo_details.promo_code !== promoCode) {
+            return res.status(400).json({
+                success: false,
+                message:
+                    'The provided promo code does not match the applied promo code.',
+            });
+        }
+
+        const tax = calculateTax(cartExist.sub_total);
+        const total = cartExist.sub_total + tax;
+        const promo_details = {
+            promo_code: '',
+            discount_type: '',
+            discount_value: 0,
+            start_date: null,
+            end_date: null,
+        };
+
+        await Cart.findOneAndUpdate(
+            { customer_id: customer_id },
+            {
+                $set: {
+                    tax,
+                    total,
+                    taxable_amount: cartExist.sub_total,
+                    promo_applied: false,
+                    promo_details,
+                },
+            },
+            { new: true }
+        );
+
+        res.status(200).json({
+            success: true,
+            message: 'Promo code removed successfully.',
+        });
+    } catch (err) {
+        const errMsg = errorHandling(err);
+        console.error('error while removing promo', err);
+        return res.status(500).json({ message: errMsg });
+    }
+};
+module.exports = { createCart, reviewCart, promoApply, promoRemove };

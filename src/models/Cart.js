@@ -24,6 +24,8 @@ const cartSchema = new Schema(
         },
         promo_applied: { type: Boolean, default: false },
         sub_total: { type: Number },
+        discount: { type: Number, default: 0 },
+        taxable_amount: { type: Number, default: 0 },
         tax: { type: Number },
         total: { type: Number },
     },

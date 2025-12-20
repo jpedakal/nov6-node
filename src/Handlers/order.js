@@ -4,7 +4,7 @@ const Cart = require('../models/Cart');
 const Order = require('../models/Order');
 const Product = require('../models/Product');
 const mongoose = require('mongoose');
-const { calculateTax } = require('../../utils/common');
+const { calculateTax, checkLimitPerOrder } = require('../../utils/common');
 
 let stripe;
 if (process.env.STRIPE_SECRET_KEY) {
@@ -15,6 +15,7 @@ const placeOrder = async (req, res) => {
     const session = await mongoose.startSession();
 
     try {
+        session.startTransaction();
         const { customer_id } = req.user;
 
         const cartInfo = await Cart.findOne({ customer_id });
@@ -22,23 +23,17 @@ const placeOrder = async (req, res) => {
             return res.status(400).json({ message: 'Cart is empty' });
         }
 
-        for (let item of cartInfo.items) {
-            const product = await Product.findOne({
-                product_id: item.product_id,
+        const { outOfStockItems } = await checkLimitPerOrder(cartInfo.items);
+        console.log('outOfStockItems:', outOfStockItems);
+        if (outOfStockItems.length > 0) {
+            return res.status(409).json({
+                code: 'OUT_OF_STOCK',
+                message:
+                    'Some items are out of stock. Please update your cart.',
             });
-            if (item.quantity > product.stock) {
-                return res.status(409).json({
-                    code: 'OUT_OF_STOCK',
-                    message:
-                        'Some items are out of stock. Please update your cart.',
-                });
-            }
         }
 
-        const { sub_total, tax, total } = calculateTax(cartInfo.items);
-
-        // 🚧 Transaction Start
-        session.startTransaction();
+        const { sub_total, taxable_amount, discount, tax, total } = cartInfo;
 
         // 1️⃣ Create order
         const order = await Order.create(
@@ -48,6 +43,8 @@ const placeOrder = async (req, res) => {
                     order_id: `ORD-${Date.now()}`,
                     items: cartInfo.items,
                     sub_total,
+                    taxable_amount,
+                    discount,
                     tax,
                     total,
                     status: 'submitted',

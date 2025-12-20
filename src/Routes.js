@@ -6,7 +6,7 @@ const {
     deleteProduct,
 } = require('./Handlers/product');
 const { createUser, signin } = require('./Handlers/user');
-const { createCart, reviewCart, promoApply } = require('./Handlers/cart');
+const { createCart, reviewCart, promoApply, promoRemove } = require('./Handlers/cart');
 const { authorization } = require('../utils/auth');
 const { placeOrder } = require('./Handlers/order');
 const {
@@ -30,6 +30,7 @@ router.post('/user/login', signin);
 router.post('/cart/create', authorization, createCart);
 router.get('/cart/review', authorization, reviewCart);
 router.put('/cart/promo-apply', authorization, promoApply);
+router.put('/cart/promo-remove', authorization, promoRemove);
 
 // Order
 router.post('/order/place-order', authorization, placeOrder);
