@@ -1,10 +1,6 @@
 const errorHandling = require("../errorHandling");
 const Product = require("../models/Product");
 
-const welcomeMsg = (req, res) => {
-    res.send("Welcome to India");
-};
-
 const fetchProduct = async (req, res) => {
     try {
         const productId = req.params.id;
@@ -51,4 +47,4 @@ const deleteProduct = async (req, res) => {
     }
 };
 
-module.exports = { welcomeMsg, fetchProduct, insertProduct, deleteProduct };
+module.exports = { fetchProduct, insertProduct, deleteProduct };
