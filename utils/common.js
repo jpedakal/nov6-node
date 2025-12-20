@@ -11,26 +11,6 @@ const calculateTax = items => {
     return { sub_total, tax, total };
 };
 
-// Check item stock availability if no cart exists
-const checkItemStock = async cartItems => {
-    const outOfStockItems = [];
-    for (const item of cartItems) {
-        const product = await Product.findOne(
-            { product_id: item.product_id },
-            { stock: 1, name: 1 }
-        );
-
-        if (!product || item.quantity > product.stock) {
-            outOfStockItems.push({
-                product_id: item.product_id,
-                requested: item.quantity,
-                "Available": product ? product.limit_per_order : 0
-            });
-        }
-    }
-    return outOfStockItems;
-};
-
 const checkLimitPerOrder = async items => {
     const outOfStockItems = [];
     for (let item of items) {
