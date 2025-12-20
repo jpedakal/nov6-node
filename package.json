@@ -1,27 +1,29 @@
 {
-  "name": "nov6-node",
-  "version": "1.0.0",
-  "description": "",
-  "license": "ISC",
-  "author": "",
-  "type": "commonjs",
-  "main": "index.js",
-  "scripts": {
-    "start": "nodemon index.js",
-    "test": ""
-  },
-  "dependencies": {
-    "bcrypt": "^6.0.0",
-    "body-parser": "^2.2.0",
-    "dotenv": "^17.2.3",
-    "express": "^5.1.0",
-    "joi": "^18.0.2",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.19.3",
-    "redis": "^5.9.0",
-    "stripe": "^20.0.0"
-  },
-  "devDependencies": {
-    "lint": "^0.8.19"
-  }
+    "name": "nov6-node",
+    "version": "1.0.0",
+    "description": "",
+    "license": "ISC",
+    "author": "",
+    "type": "commonjs",
+    "main": "index.js",
+    "scripts": {
+        "start": "nodemon index.js",
+        "format": "prettier --write .",
+        "test": ""
+    },
+    "dependencies": {
+        "bcrypt": "^6.0.0",
+        "body-parser": "^2.2.0",
+        "dotenv": "^17.2.3",
+        "express": "^5.1.0",
+        "joi": "^18.0.2",
+        "jsonwebtoken": "^9.0.2",
+        "mongoose": "^8.19.3",
+        "redis": "^5.9.0",
+        "stripe": "^20.0.0"
+    },
+    "devDependencies": {
+        "lint": "^0.8.19",
+        "prettier": "^3.7.4"
+    }
 }
