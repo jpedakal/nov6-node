@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const orderSchema = new Schema(
@@ -10,15 +10,15 @@ const orderSchema = new Schema(
         total: { type: Number, required: true },
         status: {
             type: String,
-            enum: ["submitted", "in_progress", "delivered"]
+            enum: ['submitted', 'in_progress', 'delivered'],
         },
-        payment_method: { type: String, default: "COD" }
+        payment_method: { type: String, default: 'COD' },
     },
     {
-        timestamps: true
+        timestamps: true,
     }
 );
 
-const Order = mongoose.model("orders", orderSchema);
+const Order = mongoose.model('orders', orderSchema);
 
 module.exports = Order;

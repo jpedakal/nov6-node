@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const promoSchema = new Schema({
@@ -7,55 +7,55 @@ const promoSchema = new Schema({
         required: true,
         unique: true,
         uppercase: true,
-        trim: true
+        trim: true,
     },
     description: {
         type: String,
-        required: true
+        required: true,
     },
     promo_scope: {
         type: String,
-        enum: ["BASKET", "ITEM"],
-        required: true
+        enum: ['BASKET', 'ITEM'],
+        required: true,
     },
     discount_type: {
         type: String,
-        enum: ["FLAT", "PERCENTAGE"],
-        required: true
+        enum: ['FLAT', 'PERCENTAGE'],
+        required: true,
     },
     discount_value: {
         type: Number,
-        required: true
+        required: true,
     },
     min_cart_value: {
-        type: Number
+        type: Number,
     },
     max_discount_value: {
-        type: Number
+        type: Number,
     },
     applicable_products: {
         type: [String],
-        default: []
+        default: [],
     },
     start_date: {
         type: Date,
-        required: true
+        required: true,
     },
     end_date: {
         type: Date,
-        required: true
+        required: true,
     },
     per_user_limit: {
         type: Number,
-        default: 1
+        default: 1,
     },
     is_active: {
         type: Boolean,
         required: true,
-        default: true
-    }
+        default: true,
+    },
 });
 
-const Promo = mongoose.model("promos", promoSchema);
+const Promo = mongoose.model('promos', promoSchema);
 
 module.exports = Promo;

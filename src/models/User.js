@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema(
@@ -12,21 +12,21 @@ const userSchema = new Schema(
             trim: true,
             validate: {
                 validator: value => /^[6-9]\d{9}$/.test(value),
-                message: "Invalid mobile number"
-            }
+                message: 'Invalid mobile number',
+            },
         },
         role: {
             type: String,
-            enum: ["customer", "admin", "seller"],
-            default: "customer"
+            enum: ['customer', 'admin', 'seller'],
+            default: 'customer',
         },
         customer_id: { type: String, required: true },
         is_active: { type: Boolean, default: true },
-        last_login: { type: Date, default: Date.now }
+        last_login: { type: Date, default: Date.now },
     },
     { timestamps: true }
 );
 
-const User = mongoose.model("users", userSchema);
+const User = mongoose.model('users', userSchema);
 
 module.exports = User;

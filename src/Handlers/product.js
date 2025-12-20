@@ -1,5 +1,5 @@
-const errorHandling = require("../errorHandling");
-const Product = require("../models/Product");
+const errorHandling = require('../errorHandling');
+const Product = require('../models/Product');
 
 const fetchProduct = async (req, res) => {
     try {
@@ -17,13 +17,13 @@ const insertProduct = async (req, res) => {
         const productId = req.body.product_id;
         const product = new Product(req.body);
         const existingProduct = await Product.findOne({
-            product_id: productId
+            product_id: productId,
         });
         if (existingProduct) {
             const result = await Product.findOneAndUpdate(
                 { product_id: existingProduct.product_id },
                 {
-                    $set: req.body
+                    $set: req.body,
                 },
                 { new: true }
             );
@@ -34,16 +34,16 @@ const insertProduct = async (req, res) => {
         const result = await product.save();
         res.json(result);
     } catch (err) {
-        console.log("Failed to insert products", err);
+        console.log('Failed to insert products', err);
     }
 };
 
 const deleteProduct = async (req, res) => {
     try {
         const data = await Product.deleteMany({});
-        res.status(200).json({ message: "Products deleted successfully" });
+        res.status(200).json({ message: 'Products deleted successfully' });
     } catch (err) {
-        console.log("Failed to delete products");
+        console.log('Failed to delete products');
     }
 };
 

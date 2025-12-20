@@ -1,11 +1,11 @@
-const errorHandling = require("../errorHandling");
-const User = require("../models/User");
+const errorHandling = require('../errorHandling');
+const User = require('../models/User');
 const {
     generateToken,
     encryptedPassword,
-    generateCustomerId
-} = require("../../utils/auth");
-const bcrypt = require("bcrypt");
+    generateCustomerId,
+} = require('../../utils/auth');
+const bcrypt = require('bcrypt');
 
 const createUser = async (req, res) => {
     try {
@@ -13,7 +13,7 @@ const createUser = async (req, res) => {
 
         const isUserExist = await User.findOne({ mobile: req?.body?.mobile });
         if (isUserExist) {
-            return res.json({ message: "User is already exist" });
+            return res.json({ message: 'User is already exist' });
         }
 
         const hashPassword = encryptedPassword(user?.password);
@@ -23,11 +23,11 @@ const createUser = async (req, res) => {
 
         await user.save();
         const token = generateToken(user);
-        let response = { message: "token creates successfully", token: token };
+        let response = { message: 'token creates successfully', token: token };
         res.status(201).json(response);
     } catch (err) {
         const errorMsg = errorHandling(err);
-        console.log("error while creating new user", err.statusCode);
+        console.log('error while creating new user', err.statusCode);
         res.json({ message: errorMsg });
     }
 };
@@ -36,7 +36,7 @@ const signin = async (req, res) => {
     try {
         const existingUser = await User.findOne({ mobile: req?.body?.mobile });
         if (!existingUser) {
-            return res.json({ message: "Username or password is incorrect" });
+            return res.json({ message: 'Username or password is incorrect' });
         }
 
         const isPasswordValid = await bcrypt.compare(
@@ -45,20 +45,20 @@ const signin = async (req, res) => {
         );
 
         if (!isPasswordValid) {
-            return res.json({ message: "Username or password is incorrect" });
+            return res.json({ message: 'Username or password is incorrect' });
         }
 
         const token = generateToken(existingUser);
-        let response = { message: "Login successful", token: token };
+        let response = { message: 'Login successful', token: token };
         res.status(201).json(response);
     } catch (err) {
         const errorMsg = errorHandling(err);
-        console.log("error while creating new user", err);
+        console.log('error while creating new user', err);
         res.json({ message: errorMsg });
     }
 };
 
 module.exports = {
     createUser,
-    signin
+    signin,
 };

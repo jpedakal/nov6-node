@@ -1,4 +1,4 @@
-const Joi = require("joi");
+const Joi = require('joi');
 
 const promoValidator = Joi.object({
     promo_code: Joi.string().alphanum().min(6).max(10).required(),
