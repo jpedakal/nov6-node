@@ -19,10 +19,8 @@ const calculateDiscount = (subtotal, promoDetails) => {
 };
 
 // Calculate Tax
-const calculateTax = (subtotal, discount = 0) => {
-    const taxableAmount = subtotal - discount;
-    return Number((taxableAmount * 0.18).toFixed(2));
-};
+const calculateTax = (taxableAmount = 0) =>
+    Number((taxableAmount * process.env.TAX_RATE).toFixed(2));
 
 // Check limit_per_order for each item
 const checkLimitPerOrder = async items => {

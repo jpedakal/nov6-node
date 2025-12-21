@@ -204,7 +204,8 @@ const promoRemove = async (req, res) => {
         }
 
         const tax = calculateTax(cartExist.sub_total);
-        const total = cartExist.sub_total + tax;
+        const total = Number((cartExist.sub_total + tax).toFixed(2));
+        const discount = 0;
         const promo_details = {
             promo_code: '',
             discount_type: '',
@@ -218,6 +219,7 @@ const promoRemove = async (req, res) => {
             {
                 $set: {
                     tax,
+                    discount,
                     total,
                     taxable_amount: cartExist.sub_total,
                     promo_applied: false,

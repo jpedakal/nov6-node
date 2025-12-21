@@ -12,16 +12,22 @@ const cartSchema = new Schema(
             },
         ],
         promo_details: {
-            promo_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Promo', default: null },
-            promo_code: { type: String, default: null },
-            discount_type: {
-                type: String,
-                enum: ['FLAT', 'PERCENTAGE'],
-                default: null,
+            type: {
+                promo_id: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'Promo',
+                },
+                promo_code: { type: String },
+                discount_type: {
+                    type: String,
+                    enum: ['FLAT', 'PERCENTAGE'],
+                },
+                discount_value: { type: Number },
+                applied_at: { type: Date, default: Date.now },
+                start_date: { type: Date },
+                end_date: { type: Date },
             },
-            discount_value: { type: Number, default: 0 },
-            start_date: { type: Date, default: null },
-            end_date: { type: Date, default: null },
+            default: null,
         },
         promo_applied: { type: Boolean, default: false },
         sub_total: { type: Number },
