@@ -123,7 +123,7 @@ const promoApply = async (req, res) => {
         });
 
         // Validate promo code
-        if (!promoDetails) {
+        if (!promoDetails || !promoDetails.is_active || promoDetails.end_date < new Date() || promoDetails.start_date > new Date() || cartExist.sub_total < promoDetails.min_cart_value) {
             return res
                 .status(404)
                 .json({ success: false, message: 'Invalid promo code.' });

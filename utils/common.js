@@ -1,10 +1,8 @@
 const Product = require('../src/models/Product');
 
-
 // Calculate Subtotal
 const calculateSubtotal = (items = []) =>
     items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
 
 // Calculate discount
 const calculateDiscount = (subtotal, promoDetails) => {
@@ -20,13 +18,11 @@ const calculateDiscount = (subtotal, promoDetails) => {
     return discount;
 };
 
-
 // Calculate Tax
 const calculateTax = (subtotal, discount = 0) => {
     const taxableAmount = subtotal - discount;
     return Number((taxableAmount * 0.18).toFixed(2));
 };
-
 
 // Check limit_per_order for each item
 const checkLimitPerOrder = async items => {
@@ -44,7 +40,6 @@ const checkLimitPerOrder = async items => {
     }
     return { outOfStockItems };
 };
-
 
 // Condition to check the existing quantity against limit_per_order (With or without existing cart)
 const checkQuantityAgainstLimitPerOrder = async (
@@ -70,7 +65,6 @@ const checkQuantityAgainstLimitPerOrder = async (
 
     return { outOfStockItemsCheck, totalItems: mergedItems };
 };
-
 
 module.exports = {
     calculateSubtotal,

@@ -86,13 +86,11 @@ const fetchPromo = async (req, res) => {
         // Fetch promos from database
         const data = await Promo.find(promoCode);
         if (!data.length) {
-            return res
-                .status(404)
-                .json({
-                    success: false,
-                    message: 'No promo code found',
-                    data: [],
-                });
+            return res.status(404).json({
+                success: false,
+                message: 'No promo code found',
+                data: [],
+            });
         }
         res.status(200).json({
             success: true,
