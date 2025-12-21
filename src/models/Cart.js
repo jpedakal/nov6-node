@@ -12,6 +12,7 @@ const cartSchema = new Schema(
             },
         ],
         promo_details: {
+            promo_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Promo', default: null },
             promo_code: { type: String, default: null },
             discount_type: {
                 type: String,

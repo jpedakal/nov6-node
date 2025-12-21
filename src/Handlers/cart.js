@@ -23,11 +23,10 @@ const createCart = async (req, res) => {
         if (outOfStockItemsCheck.length > 0) {
             res.status(409).json(outOfStockItemsCheck);
         } else {
-
             // Fetch Subtotal, Tax and Total
             const subTotal = calculateSubtotal(totalItems);
             const tax = calculateTax(subTotal);
-            const total = subTotal + tax;
+            const total = Number((subTotal + tax).toFixed(2));
 
             // Create new cart
             if (cartExist) {
@@ -117,24 +116,37 @@ const promoApply = async (req, res) => {
             });
         }
 
+        // Fetch promo details
         const promoDetails = await Promo.findOne({
             promo_code: promo_code,
             is_active: true,
         });
 
-        // Validate promo code
-        if (!promoDetails || !promoDetails.is_active || promoDetails.end_date < new Date() || promoDetails.start_date > new Date() || cartExist.sub_total < promoDetails.min_cart_value) {
+        // Check promo validity
+        if (
+            promoDetails.end_date < new Date() ||
+            promoDetails.start_date > new Date()
+        ) {
             return res
                 .status(404)
                 .json({ success: false, message: 'Invalid promo code.' });
         }
 
+        // Check minimum order value
+        if (cartExist.sub_total < promoDetails.min_order_value) {
+            return res.status(400).json({
+                success: false,
+                message: `Minimum order value of ${promoDetails.min_order_value} is required to apply this promo code.`,
+            });
+        }
+
         const discount = calculateDiscount(cartExist.sub_total, promoDetails);
         const taxable_amount = cartExist.sub_total - discount;
-        const tax = calculateTax(cartExist.sub_total, discount);
+        const tax = calculateTax(taxable_amount);
         const total = taxable_amount + tax;
 
         let promo_details = {
+            promo_id: promoDetails._id,
             promo_code: promoDetails.promo_code,
             discount_type: promoDetails.discount_type,
             discount_value: promoDetails.discount_value,
