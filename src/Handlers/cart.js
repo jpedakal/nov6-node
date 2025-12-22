@@ -95,7 +95,7 @@ const reviewCart = async (req, res) => {
 };
 
 const promoApply = async (req, res) => {
-    const customer_id = req.user.customer_id;
+    const { customer_id } = req.user;
     const { promo_code } = req.body;
     try {
         // Check if cart exists
