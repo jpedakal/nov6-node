@@ -30,7 +30,6 @@ const createCart = async (req, res) => {
             const total = Number((subTotal + tax).toFixed(2));
 
             const cartInfo = {
-                // customer_id: 'cc7a1ccc-08a4c0d0-1cf8f0d2-6d7e92ee',
                 items: totalItems,
                 sub_total: subTotal,
                 taxable_amount: subTotal,
@@ -47,23 +46,6 @@ const createCart = async (req, res) => {
                 { upsert: true }
             );
             return res.status(201).json({ message: 'Added to the cart' });
-
-            // Create new cart
-            // if (cartExist) {
-            //     await Cart.findOneAndUpdate(
-            //         { customer_id: req.user.customer_id },
-            //         {
-            //             $set: cartInfo,
-            //         },
-            //         { new: true }
-            //     );
-            //     return res.status(201).json({ message: 'Added to the cart' });
-            // } else {
-            //     let cart = new Cart(cartInfo);
-            //     cart.customer_id = req.user.customer_id;
-            //     await cart.save();
-            //     return res.status(201).json({ message: 'Added to the cart' });
-            // }
         }
     } catch (err) {
         const errMsg = errorHandling(err);
