@@ -24,7 +24,6 @@ const createCart = async (req, res) => {
         if (outOfStockItemsCheck.length > 0) {
             return res.status(409).json(outOfStockItemsCheck);
         } else {
-            
             // Fetch Subtotal, Tax and Total
             const subTotal = calculateSubtotal(totalItems);
             const tax = calculateTax(subTotal);
@@ -36,14 +35,14 @@ const createCart = async (req, res) => {
                 taxable_amount: subTotal,
                 tax: tax,
                 total: total,
-            }
+            };
 
             /**
                - Atomic upsert to safely handle concurrent requests:
                - Updates cart data if the cart already exists
                - Creates a new cart if none exists
                - Prevents duplicate carts for the same customer
-             **/ 
+             **/
             await Cart.findOneAndUpdate(
                 { customer_id },
                 {
@@ -63,7 +62,7 @@ const createCart = async (req, res) => {
 
 const reviewCart = async (req, res) => {
     try {
-        const customer_id = req.user.customer_id;
+        const { customer_id } = req.user;
 
         // Check if cart exists
         const cart = await Cart.findOne({ customer_id });
