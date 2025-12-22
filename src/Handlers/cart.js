@@ -10,8 +10,9 @@ const {
 
 const createCart = async (req, res) => {
     try {
+        const { customer_id } = req.user;
         const cartExist = await Cart.findOne({
-            customer_id: req.user.customer_id,
+            customer_id,
         }).lean();
 
         const { outOfStockItemsCheck, totalItems } =
@@ -21,7 +22,7 @@ const createCart = async (req, res) => {
             );
 
         if (outOfStockItemsCheck.length > 0) {
-            res.status(409).json(outOfStockItemsCheck);
+            return res.status(409).json(outOfStockItemsCheck);
         } else {
             // Fetch Subtotal, Tax and Total
             const subTotal = calculateSubtotal(totalItems);
@@ -29,6 +30,7 @@ const createCart = async (req, res) => {
             const total = Number((subTotal + tax).toFixed(2));
 
             const cartInfo = {
+                // customer_id: 'cc7a1ccc-08a4c0d0-1cf8f0d2-6d7e92ee',
                 items: totalItems,
                 sub_total: subTotal,
                 taxable_amount: subTotal,
@@ -36,22 +38,32 @@ const createCart = async (req, res) => {
                 total: total,
             };
 
+            await Cart.findOneAndUpdate(
+                { customer_id },
+                {
+                    $set: cartInfo,
+                    $setOnInsert: { customer_id },
+                },
+                { upsert: true }
+            );
+            return res.status(201).json({ message: 'Added to the cart' });
+
             // Create new cart
-            if (cartExist) {
-                await Cart.findOneAndUpdate(
-                    { customer_id: req.user.customer_id },
-                    {
-                        $set: cartInfo,
-                    },
-                    { new: true }
-                );
-                res.status(201).json({ message: 'Added to the cart' });
-            } else {
-                let cart = new Cart(cartInfo);
-                cart.customer_id = req.user.customer_id;
-                await cart.save();
-                res.status(201).json({ message: 'Added to the cart' });
-            }
+            // if (cartExist) {
+            //     await Cart.findOneAndUpdate(
+            //         { customer_id: req.user.customer_id },
+            //         {
+            //             $set: cartInfo,
+            //         },
+            //         { new: true }
+            //     );
+            //     return res.status(201).json({ message: 'Added to the cart' });
+            // } else {
+            //     let cart = new Cart(cartInfo);
+            //     cart.customer_id = req.user.customer_id;
+            //     await cart.save();
+            //     return res.status(201).json({ message: 'Added to the cart' });
+            // }
         }
     } catch (err) {
         const errMsg = errorHandling(err);
