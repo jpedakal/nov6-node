@@ -24,6 +24,7 @@ const createCart = async (req, res) => {
         if (outOfStockItemsCheck.length > 0) {
             return res.status(409).json(outOfStockItemsCheck);
         } else {
+            
             // Fetch Subtotal, Tax and Total
             const subTotal = calculateSubtotal(totalItems);
             const tax = calculateTax(subTotal);
