@@ -35,8 +35,14 @@ const createCart = async (req, res) => {
                 taxable_amount: subTotal,
                 tax: tax,
                 total: total,
-            };
+            }
 
+            /**
+               - Atomic upsert to safely handle concurrent requests:
+               - Updates cart data if the cart already exists
+               - Creates a new cart if none exists
+               - Prevents duplicate carts for the same customer
+             **/ 
             await Cart.findOneAndUpdate(
                 { customer_id },
                 {
