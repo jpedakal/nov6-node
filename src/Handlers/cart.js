@@ -28,30 +28,26 @@ const createCart = async (req, res) => {
             const tax = calculateTax(subTotal);
             const total = Number((subTotal + tax).toFixed(2));
 
+            const cartInfo = {
+                items: totalItems,
+                sub_total: subTotal,
+                taxable_amount: subTotal,
+                tax: tax,
+                total: total,
+            };
+
             // Create new cart
             if (cartExist) {
                 await Cart.findOneAndUpdate(
                     { customer_id: req.user.customer_id },
                     {
-                        $set: {
-                            items: totalItems,
-                            sub_total: subTotal,
-                            taxable_amount: subTotal,
-                            tax: tax,
-                            total: total,
-                        },
+                        $set: cartInfo,
                     },
                     { new: true }
                 );
                 res.status(201).json({ message: 'Added to the cart' });
             } else {
-                let cart = new Cart({
-                    items: totalItems,
-                    sub_total: subTotal,
-                    taxable_amount: subTotal,
-                    tax: tax,
-                    total: total,
-                });
+                let cart = new Cart(cartInfo);
                 cart.customer_id = req.user.customer_id;
                 await cart.save();
                 res.status(201).json({ message: 'Added to the cart' });
