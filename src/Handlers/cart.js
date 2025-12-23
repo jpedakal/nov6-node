@@ -90,7 +90,8 @@ const reviewCart = async (req, res) => {
         });
     } catch (err) {
         console.error('error while fetching review cart', err);
-        return res.status(500).json({ message: errorHandling(err) });
+        const errMsg = errorHandling(err);
+        return res.json({ message: errMsg });
     }
 };
 
