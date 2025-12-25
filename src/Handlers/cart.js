@@ -172,7 +172,7 @@ const promoApply = async (req, res) => {
     } catch (err) {
         console.error('error while applying promo', err);
         const errMsg = errorHandling(err);
-        return res.status(500).json({ message: errMsg });
+        return res.json({ success: false, message: errMsg });
     }
 };
 
