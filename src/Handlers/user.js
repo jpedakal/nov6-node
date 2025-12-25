@@ -28,7 +28,7 @@ const createUser = async (req, res) => {
     } catch (err) {
         const errorMsg = errorHandling(err);
         console.log('error while creating new user', err.statusCode);
-        res.json({ message: errorMsg });
+        res.json({ success: false, message: errorMsg });
     }
 };
 
