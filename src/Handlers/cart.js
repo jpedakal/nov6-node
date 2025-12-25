@@ -233,7 +233,7 @@ const promoRemove = async (req, res) => {
     } catch (err) {
         const errMsg = errorHandling(err);
         console.error('error while removing promo', err);
-        return res.status(500).json({ message: errMsg });
+        return res.status(500).json({ success: false, message: errMsg });
     }
 };
 module.exports = { createCart, reviewCart, promoApply, promoRemove };
