@@ -56,7 +56,7 @@ const createCart = async (req, res) => {
     } catch (err) {
         const errMsg = errorHandling(err);
         console.log('error while creating cart', err);
-        res.json({ message: errMsg });
+        res.json({ success: false, message: errMsg });
     }
 };
 
