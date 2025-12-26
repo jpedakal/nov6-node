@@ -54,7 +54,7 @@ const signin = async (req, res) => {
     } catch (err) {
         const errorMsg = errorHandling(err);
         console.log('error while creating new user', err);
-        res.json({ message: errorMsg });
+        res.json({ success: false, message: errorMsg });
     }
 };
 
