@@ -91,7 +91,7 @@ const reviewCart = async (req, res) => {
     } catch (err) {
         console.error('error while fetching review cart', err);
         const errMsg = errorHandling(err);
-        return res.json({ message: errMsg });
+        return res.json({ success: false, message: errMsg });
     }
 };
 
