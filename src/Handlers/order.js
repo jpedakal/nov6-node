@@ -76,7 +76,7 @@ const placeOrder = async (req, res) => {
     } catch (err) {
         await session.abortTransaction();
         console.error('Order failed:', err);
-        return res.status(400).json({ message: err.message });
+        return res.status(400).json({ success: false, message: err.message });
     } finally {
         session.endSession();
     }
