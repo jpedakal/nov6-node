@@ -165,10 +165,12 @@ const promoApply = async (req, res) => {
             },
             { new: true }
         );
+
         res.status(200).json({
             success: true,
             message: 'Promo code applied successfully.',
         });
+        
     } catch (err) {
         console.error('error while applying promo', err);
         const errMsg = errorHandling(err);
