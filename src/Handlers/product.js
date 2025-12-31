@@ -20,7 +20,7 @@ const insertProduct = async (req, res) => {
             product_id: productId,
         });
         if (existingProduct) {
-            const result = await Product.findOneAndUpdate(
+            await Product.findOneAndUpdate(
                 { product_id: existingProduct.product_id },
                 {
                     $set: req.body,
