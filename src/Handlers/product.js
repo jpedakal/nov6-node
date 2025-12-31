@@ -40,7 +40,7 @@ const insertProduct = async (req, res) => {
 
 const deleteProduct = async (req, res) => {
     try {
-        const data = await Product.deleteMany({});
+        await Product.deleteMany({});
         res.status(200).json({ message: 'Products deleted successfully' });
     } catch (err) {
         console.log('Failed to delete products');
