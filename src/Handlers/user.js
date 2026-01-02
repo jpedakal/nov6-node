@@ -45,7 +45,7 @@ const signin = async (req, res) => {
         );
 
         if (!isPasswordValid) {
-            return res.json({ message: 'Username or password is incorrect' });
+            return res.json({ success: false, message: 'Username or password is incorrect' });
         }
 
         const token = generateToken(existingUser);
