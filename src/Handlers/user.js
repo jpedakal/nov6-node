@@ -23,7 +23,7 @@ const createUser = async (req, res) => {
 
         await user.save();
         const token = generateToken(user);
-        let response = { message: 'token creates successfully', token: token };
+        let response = { success: true, message: 'token creates successfully', token: token };
         res.status(201).json(response);
     } catch (err) {
         const errorMsg = errorHandling(err);
