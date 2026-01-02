@@ -49,7 +49,7 @@ const signin = async (req, res) => {
         }
 
         const token = generateToken(existingUser);
-        let response = { message: 'Login successful', token: token };
+        let response = { success: true, message: 'Login successful', token: token };
         res.status(201).json(response);
     } catch (err) {
         const errorMsg = errorHandling(err);
