@@ -50,7 +50,7 @@ const signin = async (req, res) => {
 
         const token = generateToken(existingUser);
         let response = { success: true, message: 'Login successful', token: token };
-        res.status(201).json(response);
+        res.status(200).json(response);
     } catch (err) {
         const errorMsg = errorHandling(err);
         console.log('error while creating new user', err);
