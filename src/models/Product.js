@@ -8,7 +8,7 @@ const productSchema = new Schema({
     hsn: { type: String, required: true },
     gst_rate: { type: Number, required: true },
     is_gst_exempted: { type: Boolean, required: true },
-    // discount: { type: Number, required: true },
+    discount: { type: Number, required: true },
     stock: { type: Number, required: true },
     limit_per_order: { type: Number, required: true },
     is_active: { type: Boolean, required: true },
