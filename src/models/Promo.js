@@ -26,6 +26,7 @@ const promoSchema = new Schema({
     discount_value: {
         type: Number,
         required: true,
+        default: 0,
     },
     min_cart_value: {
         type: Number,
