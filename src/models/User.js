@@ -21,7 +21,7 @@ const userSchema = new Schema(
             default: 'customer',
         },
         customer_id: { type: String, required: true },
-        is_active: { type: Boolean, default: true },
+        is_active: { type: Boolean, default: false },
         last_login: { type: Date, default: Date.now },
     },
     { timestamps: true }
