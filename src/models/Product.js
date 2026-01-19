@@ -11,7 +11,7 @@ const productSchema = new Schema({
     discount: { type: Number, required: true },
     stock: { type: Number, required: true },
     limit_per_order: { type: Number, required: true },
-    // is_active: { type: Boolean, required: true },
+    is_active: { type: Boolean, required: true },
 });
 
 productSchema.index({ product_id: 1 });
