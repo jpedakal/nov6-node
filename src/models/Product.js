@@ -10,7 +10,7 @@ const productSchema = new Schema({
     is_gst_exempted: { type: Boolean, required: true, default: false },
     discount: { type: Number, required: true },
     stock: { type: Number, required: true },
-    limit_per_order: { type: Number, required: true },
+    // limit_per_order: { type: Number, required: true },
     is_active: { type: Boolean, required: true },
 });
 
